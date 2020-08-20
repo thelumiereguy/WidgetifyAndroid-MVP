@@ -8,7 +8,7 @@ import com.thelumierguy.canvasviewtest.online.contracts.CustomLayout
 import com.thelumierguy.canvasviewtest.online.contracts.CustomView
 import kotlin.math.roundToInt
 
-class Row(private val viewCallbacks: ViewCallbacks, initBlock: Row.() -> Unit) : CustomLayout {
+class Stack(private val viewCallbacks: ViewCallbacks, initBlock: Stack.() -> Unit) : CustomLayout {
 
     override var widthFlex: Int = 0
 
@@ -43,10 +43,11 @@ class Row(private val viewCallbacks: ViewCallbacks, initBlock: Row.() -> Unit) :
         childrenViews.forEach { child ->
             val childWidth = ((child.widthRatio / 100) * screenWidth).roundToInt()
             val childHeight = ((child.heightRatio / 100) * screenHeight).roundToInt()
-            child.drawRect = getChildRect(
-                childWidth,
-                childHeight,
-                child
+            child.drawRect = Rect(
+                child.padding,
+                child.padding,
+                childWidth+ child.padding,
+                childHeight+ child.padding
             )
         }
         setHeightWithChildren()
@@ -56,14 +57,4 @@ class Row(private val viewCallbacks: ViewCallbacks, initBlock: Row.() -> Unit) :
         height = childrenViews.map { it.drawRect.height() + (it.padding * 2) }.max() ?: 0
     }
 
-    private fun getChildRect(childWidth: Int, childHeight: Int, child: CustomView): Rect {
-        val drawRect = Rect(
-            width + child.padding,
-            child.padding,
-            width + childWidth,
-            childHeight
-        )
-        width += childWidth + child.padding
-        return drawRect
-    }
 }

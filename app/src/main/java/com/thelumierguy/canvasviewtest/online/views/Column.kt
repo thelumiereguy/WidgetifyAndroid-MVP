@@ -29,7 +29,6 @@ class Column(private val viewCallbacks: ViewCallbacks, initBlock: Column.() -> U
 
     override fun addChildren(vararg view: CustomView) {
         childrenViews.addAll(view)
-        setWidthWithChildren()
         layoutViews()
     }
 
@@ -67,9 +66,5 @@ class Column(private val viewCallbacks: ViewCallbacks, initBlock: Column.() -> U
         )
         height += childHeight + child.padding
         return drawRect
-    }
-
-    override fun setFlexSize(parentSize: Int) {
-
     }
 }

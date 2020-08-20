@@ -24,9 +24,6 @@ class OnlineMemberItemView @JvmOverloads constructor(
 
     fun addLayout(vararg views: CustomLayout) {
         customViews = views.map { it }
-        views.forEach {
-            it.setFlexSize(views.size)
-        }
     }
 
     override fun onDraw(canvas: Canvas?) {
