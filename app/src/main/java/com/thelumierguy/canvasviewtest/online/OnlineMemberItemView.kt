@@ -52,6 +52,10 @@ class OnlineMemberItemView @JvmOverloads constructor(
     }
 }
 
-
+interface ViewCallbacks {
+    fun refreshView()
+    fun getScreenWidth(): Int
+    fun getScreenHeight(): Int
+}
 
 
