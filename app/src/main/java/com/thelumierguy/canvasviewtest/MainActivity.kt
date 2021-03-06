@@ -17,57 +17,31 @@ class MainActivity : AppCompatActivity() {
 
         binding.widgetView.init {
             addLayout(
-                Column(this) {
-                    addChildren(
-                        Image(this@init) {
-                            viewData =
-                                ViewData("https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg")
-                            padding = 4
-                            heightPercent = 25F
-                            widthPercent = 60F
-                        },
-                        Image(this@init) {
-                            viewData =
-                                ViewData("https://www.tjtoday.org/wp-content/uploads/2020/01/unnamed-7.png")
-                            padding = 4
-                            heightPercent = 15F
-                            widthPercent = 45F
-                        },
-                        Image(this@init) {
-                            viewData =
-                                ViewData("https://www.finetoshine.com/wp-content/uploads/2020/07/Tom-And-Jerry-Meme-Template.jpg")
-                            padding = 4
-                            heightPercent = 10F
-                            widthPercent = 25F
-                        },
-                    )
-                },
-                Row(this) {
-                    addChildren(
-                        Image(this@init) {
-                            viewData =
-                                ViewData("https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg")
-                            padding = 4
-                            heightPercent = 25F
-                            widthPercent = 60F
-                        },
-                        Image(this@init) {
-                            viewData =
-                                ViewData("https://www.tjtoday.org/wp-content/uploads/2020/01/unnamed-7.png")
-                            padding = 4
-                            heightPercent = 15F
-                            widthPercent = 40F
-                        },
-                    )
-                },
                 Stack(this) {
                     addChildren(
-                        Image(this@init) {
-                            viewData =
-                                ViewData("https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg")
-                            padding = 24
+                        Image(
+                            imageData = ViewData.Url("https://tinyurl.com/2zjbzkb5"),
+                            this@init
+                        ) {
+                            padding = 4
+                            heightPercent = 45F
+                            widthPercent = 90F
+                        },
+                        Image(
+                            imageData = ViewData.Url("https://tinyurl.com/2c6kjxxv"),
+                            this@init
+                        ) {
+                            padding = 4
                             heightPercent = 20F
-                            widthPercent = 50F
+                            widthPercent = 55F
+                        },
+                        Image(
+                            imageData = ViewData.Url("https://tinyurl.com/5xe4cxrv"),
+                            this@init
+                        ) {
+                            padding = 4
+                            heightPercent = 10F
+                            widthPercent = 35F
                         },
                     )
                 }

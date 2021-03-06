@@ -11,16 +11,15 @@ import com.thelumierguy.canvasviewtest.online.views.WidgetCallbacks
 import com.thelumierguy.canvasviewtest.online.contracts.CustomView
 import com.thelumierguy.canvasviewtest.online.contracts.ViewData
 
-open class Image(val widgetCallbacks: WidgetCallbacks, initBlock: Image.() -> Unit) : CustomView{
+open class Image(
+    val imageData: ViewData,
+    val widgetCallbacks: WidgetCallbacks,
+    initBlock: Image.() -> Unit
+) : CustomView {
 
     override var drawRect: Rect = Rect()
     override var heightPercent: Float = 0F
     override var widthPercent: Float = 0F
-    var viewData = ViewData(null)
-        set(value) {
-            field = value
-            loadImage()
-        }
 
     override var padding: Int = 0
 
@@ -41,23 +40,31 @@ open class Image(val widgetCallbacks: WidgetCallbacks, initBlock: Image.() -> Un
     }
 
     private fun loadImage() {
-        if (drawRect.width() != 0 && drawRect.height() != 0 && viewData.value != null)
-            Picasso.get().load(viewData.value).centerInside()
-                .resize(drawRect.width(), drawRect.height())
-                .into(object : Target {
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+        if (drawRect.width() != 0 && drawRect.height() != 0)
+            when (imageData) {
+                is ViewData.Url -> {
+                    loadOnline(imageData)
+                }
+            }
+    }
 
-                    }
+    private fun loadOnline(imageData: ViewData.Url) {
+        Picasso.get().load(imageData.url).centerInside()
+            .resize(drawRect.width(), drawRect.height())
+            .into(object : Target {
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
 
-                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                    }
+                }
 
-                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        bitmapToLoad = bitmap
-                        widgetCallbacks.redrawWidgets()
-                    }
+                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                }
 
-                })
+                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                    bitmapToLoad = bitmap
+                    widgetCallbacks.redrawWidgets()
+                }
+
+            })
     }
 
 }

@@ -3,6 +3,7 @@ package com.thelumierguy.canvasviewtest.online.contracts
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.view.View
 
 interface CustomView {
     var drawRect: Rect
@@ -12,4 +13,6 @@ interface CustomView {
     fun render(canvas: Canvas, context: Context)
 }
 
-data class ViewData(val value: String?)
+sealed class ViewData {
+    data class Url(val url: String) : ViewData()
+}

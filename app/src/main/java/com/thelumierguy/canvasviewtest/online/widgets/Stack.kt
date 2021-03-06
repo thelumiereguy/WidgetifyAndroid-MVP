@@ -54,7 +54,8 @@ open class Stack(private val widgetCallbacks: WidgetCallbacks, initBlock: Stack.
     }
 
     private fun setHeightWithChildren() {
-        height = childrenViews.map { it.drawRect.height() + (it.padding * 2) }.max() ?: 0
+        height = childrenViews.map { it.drawRect.height() + (it.padding * 2) }.maxOrNull() ?: 0
+        width = childrenViews.map { it.drawRect.width() + (it.padding * 2) }.maxOrNull() ?: 0
     }
 
 }
