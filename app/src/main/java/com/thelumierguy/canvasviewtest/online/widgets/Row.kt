@@ -1,14 +1,14 @@
-package com.thelumierguy.canvasviewtest.online.views
+package com.thelumierguy.canvasviewtest.online.widgets
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
-import com.thelumierguy.canvasviewtest.online.ViewCallbacks
+import com.thelumierguy.canvasviewtest.online.views.WidgetCallbacks
 import com.thelumierguy.canvasviewtest.online.contracts.CustomLayout
 import com.thelumierguy.canvasviewtest.online.contracts.CustomView
 import kotlin.math.roundToInt
 
-class Stack(private val viewCallbacks: ViewCallbacks, initBlock: Stack.() -> Unit) : CustomLayout {
+open class Row(private val widgetCallbacks: WidgetCallbacks, initBlock: Row.() -> Unit) : CustomLayout {
 
     override var widthFlex: Int = 0
 
@@ -31,23 +31,22 @@ class Stack(private val viewCallbacks: ViewCallbacks, initBlock: Stack.() -> Uni
         layoutViews()
     }
 
-    override fun renderChildren(canvas: Canvas, context: Context) {
+    override fun render(canvas: Canvas, context: Context) {
         childrenViews.forEach {
             it.render(canvas, context)
         }
     }
 
     override fun layoutViews() {
-        val screenWidth = viewCallbacks.getScreenWidth()
-        val screenHeight = viewCallbacks.getScreenHeight()
+        val screenWidth = widgetCallbacks.getScreenWidth()
+        val screenHeight = widgetCallbacks.getScreenHeight()
         childrenViews.forEach { child ->
-            val childWidth = ((child.widthRatio / 100) * screenWidth).roundToInt()
-            val childHeight = ((child.heightRatio / 100) * screenHeight).roundToInt()
-            child.drawRect = Rect(
-                child.padding,
-                child.padding,
-                childWidth+ child.padding,
-                childHeight+ child.padding
+            val childWidth = ((child.widthPercent / 100) * screenWidth).roundToInt()
+            val childHeight = ((child.heightPercent / 100) * screenHeight).roundToInt()
+            child.drawRect = getChildRect(
+                childWidth,
+                childHeight,
+                child
             )
         }
         setHeightWithChildren()
@@ -57,4 +56,14 @@ class Stack(private val viewCallbacks: ViewCallbacks, initBlock: Stack.() -> Uni
         height = childrenViews.map { it.drawRect.height() + (it.padding * 2) }.max() ?: 0
     }
 
+    private fun getChildRect(childWidth: Int, childHeight: Int, child: CustomView): Rect {
+        val drawRect = Rect(
+            width + child.padding,
+            child.padding,
+            width + childWidth,
+            childHeight
+        )
+        width += childWidth + child.padding
+        return drawRect
+    }
 }

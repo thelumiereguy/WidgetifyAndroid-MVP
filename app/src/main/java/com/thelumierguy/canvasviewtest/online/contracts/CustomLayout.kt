@@ -13,5 +13,5 @@ interface CustomLayout {
     fun layoutViews()
     val childrenViews: MutableList<CustomView>
     fun addChildren(vararg view: CustomView)
-    fun renderChildren(canvas: Canvas, context: Context)
+    fun render(canvas: Canvas, context: Context)
 }

@@ -1,19 +1,27 @@
-package com.thelumierguy.canvasviewtest.online.views
+package com.thelumierguy.canvasviewtest.online.widgets
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import com.thelumierguy.canvasviewtest.online.ViewCallbacks
+import com.thelumierguy.canvasviewtest.online.views.WidgetCallbacks
 import com.thelumierguy.canvasviewtest.online.contracts.CustomView
+import com.thelumierguy.canvasviewtest.online.contracts.ViewData
 
-class Image(val viewCallbacks: ViewCallbacks, initBlock: Image.() -> Unit = {}) : CustomView {
+open class Image(val widgetCallbacks: WidgetCallbacks, initBlock: Image.() -> Unit) : CustomView{
 
     override var drawRect: Rect = Rect()
-    override var heightRatio: Float = 0F
-    override var widthRatio: Float = 0F
-    override var value: String? = null
+    override var heightPercent: Float = 0F
+    override var widthPercent: Float = 0F
+    var viewData = ViewData(null)
+        set(value) {
+            field = value
+            loadImage()
+        }
+
     override var padding: Int = 0
 
     var bitmapToLoad: Bitmap? = null
@@ -32,18 +40,10 @@ class Image(val viewCallbacks: ViewCallbacks, initBlock: Image.() -> Unit = {}) 
         }
     }
 
-    override fun setSizeRatio(heightRatio: Float, widthRatio: Float) {
-        this.heightRatio = heightRatio
-        this.widthRatio = widthRatio
-    }
-
-    override fun measureSize(): Pair<Int, Int> {
-        return Pair(drawRect.width(), drawRect.height())
-    }
-
     private fun loadImage() {
-        if (drawRect.width() != 0 && drawRect.height() != 0 && value != null)
-            Picasso.get().load(value).centerInside().resize(drawRect.width(), drawRect.height())
+        if (drawRect.width() != 0 && drawRect.height() != 0 && viewData.value != null)
+            Picasso.get().load(viewData.value).centerInside()
+                .resize(drawRect.width(), drawRect.height())
                 .into(object : Target {
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
 
@@ -54,7 +54,7 @@ class Image(val viewCallbacks: ViewCallbacks, initBlock: Image.() -> Unit = {}) 
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                         bitmapToLoad = bitmap
-                        viewCallbacks.refreshView()
+                        widgetCallbacks.redrawWidgets()
                     }
 
                 })

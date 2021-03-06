@@ -1,14 +1,15 @@
-package com.thelumierguy.canvasviewtest.online.views
+package com.thelumierguy.canvasviewtest.online.widgets
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
-import com.thelumierguy.canvasviewtest.online.ViewCallbacks
+import com.thelumierguy.canvasviewtest.online.views.WidgetCallbacks
 import com.thelumierguy.canvasviewtest.online.contracts.CustomLayout
 import com.thelumierguy.canvasviewtest.online.contracts.CustomView
 import kotlin.math.roundToInt
 
-class Row(private val viewCallbacks: ViewCallbacks, initBlock: Row.() -> Unit) : CustomLayout {
+open class Column(private val widgetCallbacks: WidgetCallbacks, initBlock: Column.() -> Unit) :
+    CustomLayout {
 
     override var widthFlex: Int = 0
 
@@ -31,39 +32,39 @@ class Row(private val viewCallbacks: ViewCallbacks, initBlock: Row.() -> Unit) :
         layoutViews()
     }
 
-    override fun renderChildren(canvas: Canvas, context: Context) {
+    override fun render(canvas: Canvas, context: Context) {
         childrenViews.forEach {
             it.render(canvas, context)
         }
     }
 
     override fun layoutViews() {
-        val screenWidth = viewCallbacks.getScreenWidth()
-        val screenHeight = viewCallbacks.getScreenHeight()
+        val screenWidth = widgetCallbacks.getScreenWidth()
+        val screenHeight = widgetCallbacks.getScreenHeight()
         childrenViews.forEach { child ->
-            val childWidth = ((child.widthRatio / 100) * screenWidth).roundToInt()
-            val childHeight = ((child.heightRatio / 100) * screenHeight).roundToInt()
+            val childWidth = ((child.widthPercent / 100) * screenWidth).roundToInt()
+            val childHeight = ((child.heightPercent / 100) * screenHeight).roundToInt()
             child.drawRect = getChildRect(
                 childWidth,
                 childHeight,
                 child
             )
         }
-        setHeightWithChildren()
+        setWidthWithChildren()
     }
 
-    private fun setHeightWithChildren() {
-        height = childrenViews.map { it.drawRect.height() + (it.padding * 2) }.max() ?: 0
+    private fun setWidthWithChildren() {
+        width = childrenViews.map { it.drawRect.width() + (it.padding * 2) }.maxOrNull() ?: 0
     }
 
     private fun getChildRect(childWidth: Int, childHeight: Int, child: CustomView): Rect {
         val drawRect = Rect(
-            width + child.padding,
             child.padding,
-            width + childWidth,
-            childHeight
+            height + child.padding,
+            childWidth,
+            height + childHeight
         )
-        width += childWidth + child.padding
+        height += childHeight + child.padding
         return drawRect
     }
 }

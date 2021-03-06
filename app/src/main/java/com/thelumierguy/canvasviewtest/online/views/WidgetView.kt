@@ -1,4 +1,4 @@
-package com.thelumierguy.canvasviewtest.online
+package com.thelumierguy.canvasviewtest.online.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,11 +8,11 @@ import android.view.View
 import com.thelumierguy.canvasviewtest.online.contracts.CustomLayout
 
 
-class OnlineMemberItemView @JvmOverloads constructor(
+class WidgetView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyle: Int = 0
-) : View(context, attributeSet, defStyle), ViewCallbacks {
+) : View(context, attributeSet, defStyle), WidgetCallbacks {
 
     var customViews = listOf<CustomLayout>()
 
@@ -20,7 +20,7 @@ class OnlineMemberItemView @JvmOverloads constructor(
         setBackgroundColor(Color.BLACK)
     }
 
-    fun init(initBlock: OnlineMemberItemView.() -> Unit) = this.initBlock()
+    fun init(initBlock: WidgetView.() -> Unit) = this.initBlock()
 
     fun addLayout(vararg views: CustomLayout) {
         customViews = views.map { it }
@@ -29,17 +29,18 @@ class OnlineMemberItemView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         canvas?.let { canvas ->
             customViews.forEach {
-                it.renderChildren(canvas, context)
+                it.render(canvas, context)
             }
         }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val newHeight = customViews.map { it.height }.max() ?: 0
-        setMeasuredDimension(0, newHeight)
+        val newHeight = customViews.map { it.height }.maxOrNull() ?: 0
+        val newWidth = customViews.map { it.width }.maxOrNull() ?: 0
+        setMeasuredDimension(newWidth, newHeight)
     }
 
-    override fun refreshView() {
+    override fun redrawWidgets() {
         invalidate()
     }
 
@@ -52,8 +53,8 @@ class OnlineMemberItemView @JvmOverloads constructor(
     }
 }
 
-interface ViewCallbacks {
-    fun refreshView()
+interface WidgetCallbacks {
+    fun redrawWidgets()
     fun getScreenWidth(): Int
     fun getScreenHeight(): Int
 }
